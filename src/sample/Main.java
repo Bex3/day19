@@ -56,7 +56,7 @@ public class Main extends Application {
             public void handle(ActionEvent e) {
                 System.out.println("I can switch to another scene here ...");
 //                primaryStage.setScene(loginScene);
-//                startSecondStage();
+               startSecondStage();
             }
         });
 
@@ -103,6 +103,50 @@ public class Main extends Application {
 
 
     }
+
+    public void startSecondStage() {
+        Stage secondaryStage = new Stage();
+        secondaryStage.setTitle("Welcome to JavaFX");
+
+        // we're using a grid layout
+        GridPane grid = new GridPane();
+        grid.setAlignment(Pos.CENTER);
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(25, 25, 25, 25));
+        grid.setGridLinesVisible(true);
+//        grid.setPrefSize(primaryStage.getMaxWidth(), primaryStage.getMaxHeight());
+
+        // add buttons and canvas to the grid
+        Text sceneTitle = new Text("Welcome to Paint application");
+        sceneTitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+        grid.add(sceneTitle, 0, 0);
+
+        Button button = new Button("Sample paint button");
+        HBox hbButton = new HBox(10);
+        hbButton.setAlignment(Pos.TOP_LEFT);
+        hbButton.getChildren().add(button);
+        grid.add(hbButton, 0, 1);
+
+        button.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                System.out.println("I can switch to another scene here ...");
+            }
+        });
+
+        // add canvas
+        Canvas canvas = new Canvas(DEFAULT_SCENE_WIDTH, DEFAULT_SCENE_HEIGHT-100);
+
+        // set our grid layout on the scene
+        Scene defaultScene = new Scene(grid, DEFAULT_SCENE_WIDTH, DEFAULT_SCENE_HEIGHT);
+
+        secondaryStage.setScene(defaultScene);
+        System.out.println("About to show the second stage");
+
+        secondaryStage.show();
+    }
+
 
 
     public static void main(String[] args) {
