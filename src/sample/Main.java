@@ -28,6 +28,26 @@ public class Main extends Application {
     final double DEFAULT_SCENE_HEIGHT = 600;
     double strokeSize = 2;
     boolean isDrawing = true;
+    double xPosition;
+    double yPosition;
+
+
+    public double getxPosition() {
+        return xPosition;
+    }
+
+    public void setxPosition(double xPosition) {
+        this.xPosition = xPosition;
+    }
+
+    public double getyPosition() {
+        return yPosition;
+    }
+
+    public void setyPosition(double yPosition) {
+        this.yPosition = yPosition;
+    }
+
 
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -53,6 +73,7 @@ public class Main extends Application {
         hbButton.setAlignment(Pos.TOP_LEFT);
         hbButton.getChildren().add(button);
         grid.add(hbButton, 0, 1); //column first then row
+
 
 
         button.setOnAction(new EventHandler<ActionEvent>() {
@@ -85,6 +106,8 @@ public class Main extends Application {
                 }
 
 //                addStroke(e.getX(), e.getY(), 10);
+            setxPosition(e.getSceneX());
+            setyPosition(e.getScreenY());
             }
         });
 
@@ -135,6 +158,17 @@ public class Main extends Application {
         grid.setGridLinesVisible(true);
 //        grid.setPrefSize(primaryStage.getMaxWidth(), primaryStage.getMaxHeight());
 
+        Canvas canvas = new Canvas(DEFAULT_SCENE_WIDTH, DEFAULT_SCENE_HEIGHT-100);
+        grid.add(canvas, 0, 2);
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+        gc.setFill(Color.GREEN);
+        gc.setStroke(Color.BLUE);
+        gc.setStroke(Color.color(Math.random(), Math.random(), Math.random()));
+        gc.setLineWidth(5);
+
+        gc.strokeOval(xPosition,yPosition, strokeSize, strokeSize);
+
+
         // add buttons and canvas to the grid
         Text sceneTitle = new Text("Welcome to Paint application");
         sceneTitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
@@ -147,6 +181,10 @@ public class Main extends Application {
         grid.add(hbButton, 0, 1);
 
 
+
+
+
+
         button.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
@@ -156,7 +194,7 @@ public class Main extends Application {
 
 
         // add canvas
-        Canvas canvas = new Canvas(DEFAULT_SCENE_WIDTH, DEFAULT_SCENE_HEIGHT-100);
+        //Canvas canvas = new Canvas(DEFAULT_SCENE_WIDTH, DEFAULT_SCENE_HEIGHT-100);
 
 
         // set our grid layout on the scene
