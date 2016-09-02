@@ -31,23 +31,7 @@ public class Main extends Application {
     double xPosition;
     double yPosition;
 
-
-    public double getxPosition() {
-        return xPosition;
-    }
-
-    public void setxPosition(double xPosition) {
-        this.xPosition = xPosition;
-    }
-
-    public double getyPosition() {
-        return yPosition;
-    }
-
-    public void setyPosition(double yPosition) {
-        this.yPosition = yPosition;
-    }
-
+    GraphicsContext gcSecond = null;
 
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -100,16 +84,20 @@ public class Main extends Application {
             public void handle(MouseEvent e) {
 //                System.out.println("x: " + e.getX() + ", y: " + e.getY());
                 if (isDrawing) {
-                    gc.strokeOval(e.getX(), e.getY(), strokeSize, strokeSize);
+                    if (e.isDragDetect()) {
+                        gc.strokeOval(e.getX(), e.getY(), strokeSize, strokeSize);
+                        xPosition = (e.getX());
+                        yPosition = (e.getY());
+                        if (gcSecond != null) {
+                            gcSecond.strokeOval(xPosition,yPosition, strokeSize, strokeSize);
+                        }
+                    }
+
                 } else if (!isDrawing){
                     gc.strokeOval(e.getX(), e.getY(), 0, 0);
                 }
 
 //                addStroke(e.getX(), e.getY(), 10);
-
-                setxPosition(e.getSceneX());
-                setyPosition(e.getScreenY());   
-
 
             }
         });
@@ -163,13 +151,13 @@ public class Main extends Application {
 
         Canvas canvas = new Canvas(DEFAULT_SCENE_WIDTH, DEFAULT_SCENE_HEIGHT-100);
         grid.add(canvas, 0, 2);
-        GraphicsContext gc = canvas.getGraphicsContext2D();
-        gc.setFill(Color.GREEN);
-        gc.setStroke(Color.BLUE);
-        gc.setStroke(Color.color(Math.random(), Math.random(), Math.random()));
-        gc.setLineWidth(5);
+        gcSecond = canvas.getGraphicsContext2D();
+        gcSecond.setFill(Color.GREEN);
+        gcSecond.setStroke(Color.BLUE);
+        gcSecond.setStroke(Color.color(Math.random(), Math.random(), Math.random()));
+        gcSecond.setLineWidth(5);
 
-        gc.strokeOval(xPosition,yPosition, strokeSize, strokeSize);
+
 
 
         // add buttons and canvas to the grid
