@@ -11,6 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
@@ -25,6 +26,8 @@ public class Main extends Application {
 
     final double DEFAULT_SCENE_WIDTH = 800;
     final double DEFAULT_SCENE_HEIGHT = 600;
+    double strokeSize = 2;
+    boolean isDrawing = true;
 
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -51,6 +54,7 @@ public class Main extends Application {
         hbButton.getChildren().add(button);
         grid.add(hbButton, 0, 1); //column first then row
 
+
         button.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
@@ -74,17 +78,31 @@ public class Main extends Application {
             @Override
             public void handle(MouseEvent e) {
 //                System.out.println("x: " + e.getX() + ", y: " + e.getY());
-                gc.strokeOval(e.getX(), e.getY(), 10, 10);
+                if (isDrawing) {
+                    gc.strokeOval(e.getX(), e.getY(), strokeSize, strokeSize);
+                } else if (!isDrawing){
+                    gc.strokeOval(e.getX(), e.getY(), 0, 0);
+                }
+
 //                addStroke(e.getX(), e.getY(), 10);
             }
         });
 
-        canvas.setOnKeyPressed(new EventHandler<KeyEvent>() {
+        grid.setOnKeyPressed(new EventHandler<KeyEvent>() {
 
             @Override
             public void handle(KeyEvent e) {
                 System.out.println(e.getCode());
                 System.out.println(e.getText());
+                System.out.println("Key pressed " + e.getCode());
+                if (e.getCode().equals(KeyCode.D)) {
+                        isDrawing = !isDrawing;
+                    System.out.println(isDrawing);
+                } else if (e.getCode() == KeyCode.UP) {
+                    strokeSize += 1;
+                } else if (e.getCode() == KeyCode.DOWN){
+                    strokeSize -= 1;
+                }
             }
         });
 
@@ -128,6 +146,7 @@ public class Main extends Application {
         hbButton.getChildren().add(button);
         grid.add(hbButton, 0, 1);
 
+
         button.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
@@ -135,14 +154,17 @@ public class Main extends Application {
             }
         });
 
+
         // add canvas
         Canvas canvas = new Canvas(DEFAULT_SCENE_WIDTH, DEFAULT_SCENE_HEIGHT-100);
+
 
         // set our grid layout on the scene
         Scene defaultScene = new Scene(grid, DEFAULT_SCENE_WIDTH, DEFAULT_SCENE_HEIGHT);
 
         secondaryStage.setScene(defaultScene);
         System.out.println("About to show the second stage");
+
 
         secondaryStage.show();
     }
