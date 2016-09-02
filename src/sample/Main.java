@@ -106,8 +106,11 @@ public class Main extends Application {
                 }
 
 //                addStroke(e.getX(), e.getY(), 10);
-            setxPosition(e.getSceneX());
-            setyPosition(e.getScreenY());
+
+                setxPosition(e.getSceneX());
+                setyPosition(e.getScreenY());   
+
+
             }
         });
 
