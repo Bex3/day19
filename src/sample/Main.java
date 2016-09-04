@@ -22,6 +22,12 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
+
 public class Main extends Application {
 
     final double DEFAULT_SCENE_WIDTH = 800;
@@ -58,6 +64,9 @@ public class Main extends Application {
         hbButton.getChildren().add(button);
         grid.add(hbButton, 0, 1); //column first then row
 
+        Button secondButton = new Button ("Connect to a friend, if you dare");
+        hbButton.getChildren().add(secondButton);
+        //grid.add(SecondButton, 0, 1);
 
 
         button.setOnAction(new EventHandler<ActionEvent>() {
@@ -66,6 +75,35 @@ public class Main extends Application {
                 System.out.println("I can switch to another scene here ...");
 //                primaryStage.setScene(loginScene);
                startSecondStage();
+            }
+        });
+
+        secondButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                System.out.println("Connecting to a new person");
+                try{
+
+                    Socket clientSocket = new Socket ("localhost", 8005);
+                    System.out.println("Connection established");
+                    PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true); //output
+                    System.out.println("output stream initialized");
+
+
+                    BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream())); //input - inputstream gives you the bits and bytes inputstreamreader gives us chars instead of bytes
+                    System.out.println("input stream initialized");
+
+
+                    String serverResponse = in.readLine();
+                    System.out.println("Server response: " + serverResponse);
+                    serverResponse = in.readLine();
+                    System.out.println("Server response: " + serverResponse);
+
+
+                    // clientSocket.close();
+                } catch (IOException exception) {
+                    exception.printStackTrace(); //see the exception
+                }
             }
         });
 
@@ -202,5 +240,6 @@ public class Main extends Application {
 
     public static void main(String[] args) {
         launch(args);
+
     }
 }
