@@ -112,6 +112,7 @@ public class Main extends Application {
                         myStroke.y = (e.getY());
                         myStroke.strokeS = strokeSize;
 
+
                         jsonSerializer(myStroke);
 
 
@@ -174,8 +175,7 @@ public class Main extends Application {
         grid.setHgap(10);
         grid.setVgap(10);
         grid.setPadding(new Insets(25, 25, 25, 25));
-        grid.setGridLinesVisible(true);
-//        grid.setPrefSize(primaryStage.getMaxWidth(), primaryStage.getMaxHeight());
+        grid.setGridLinesVisible(true);//        grid.setPrefSize(primaryStage.getMaxWidth(), primaryStage.getMaxHeight());
 
         Canvas canvas = new Canvas(DEFAULT_SCENE_WIDTH, DEFAULT_SCENE_HEIGHT-100);
         grid.add(canvas, 0, 2);
@@ -225,7 +225,6 @@ public class Main extends Application {
 
         //secondaryStage.show();
     }
-
     public void client () {
         try {
             // connect to the server on the target port
@@ -247,6 +246,7 @@ public class Main extends Application {
         }
     }
 
+
     public String jsonSerializer(Stroke myStoke) {
         JsonSerializer jsonSerializer = new JsonSerializer().deep(true);
         String jsonString = jsonSerializer.serialize(myStoke);
@@ -254,15 +254,6 @@ public class Main extends Application {
 
         return jsonString;
     }
-
-/*    public Coordinates jsonRestore(String ) {
-        JsonParser toDoItemParser = new JsonParser();
-        myStroke coordinates = toDoItemParser.parse(, Stroke.class);
-
-        return coordinates;
-    }*/
-
-
 
     public static void main(String[] args) {
         launch(args);

@@ -1,5 +1,7 @@
 package sample;
 
+import javafx.application.Platform;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -42,7 +44,12 @@ public class ConnectionHandler implements Runnable{
 
         BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
-            Main myMain = new Main ();
+
+
+        Platform.runLater(new RunnableGC(gc, stroke));
+
+
+        Main myMain = new Main ();
             myMain.startSecondStage();
 
             String serverResponse = in.readLine();
