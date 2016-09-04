@@ -21,6 +21,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import jodd.json.JsonParser;
+import jodd.json.JsonSerializer;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -109,6 +111,11 @@ public class Main extends Application {
                         myStroke.x = (e.getX());
                         myStroke.y = (e.getY());
                         myStroke.strokeS = strokeSize;
+
+                        jsonSerializer(myStroke);
+
+
+
                         if (gcSecond != null) {
                             gcSecond.strokeOval(xPosition,yPosition, strokeSize, strokeSize);
                         }
@@ -239,6 +246,22 @@ public class Main extends Application {
             exception.printStackTrace();
         }
     }
+
+    public String jsonSerializer(Stroke myStoke) {
+        JsonSerializer jsonSerializer = new JsonSerializer().deep(true);
+        String jsonString = jsonSerializer.serialize(myStoke);
+        System.out.println(jsonString);
+
+        return jsonString;
+    }
+
+/*    public Coordinates jsonRestore(String ) {
+        JsonParser toDoItemParser = new JsonParser();
+        myStroke coordinates = toDoItemParser.parse(, Stroke.class);
+
+        return coordinates;
+    }*/
+
 
 
     public static void main(String[] args) {
