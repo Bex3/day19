@@ -21,7 +21,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import jodd.json.JsonParser;
 import jodd.json.JsonSerializer;
 
 import java.io.BufferedReader;
@@ -38,6 +37,13 @@ public class Main extends Application {
     boolean isDrawing = true;
     double xPosition;
     double yPosition;
+    String strokeString;
+
+    boolean isSharing = false;
+    Stroke currentStroke;
+    String sendingString;
+
+
 
     GraphicsContext gcSecond = null;
 
@@ -85,6 +91,7 @@ public class Main extends Application {
             public void handle(ActionEvent event) {
                 System.out.println("Connecting to a new person");
                 client();
+                isSharing = true;
             }
         });
 
@@ -112,13 +119,16 @@ public class Main extends Application {
                         myStroke.y = (e.getY());
                         myStroke.strokeS = strokeSize;
 
+                        currentStroke = myStroke;
 
-                        jsonSerializer(myStroke);
+                        jsonSerializerStroke(myStroke);
 
 
 
                         if (gcSecond != null) {
-                            gcSecond.strokeOval(xPosition,yPosition, strokeSize, strokeSize);
+                            //gcSecond.strokeOval(xPosition,yPosition, strokeSize, strokeSize);
+                            gc.strokeOval(xPosition,yPosition, strokeSize, strokeSize);
+
                         }
                     }
 
@@ -239,6 +249,12 @@ public class Main extends Application {
             // read what the server returns
             String serverResponse = in.readLine();
 
+            int counter = 0;
+            while(counter < 15) {
+                System.out.println(strokeString);
+                counter++;
+            }
+
             // close the connection
             clientSocket.close();
         } catch (IOException exception) {
@@ -246,13 +262,23 @@ public class Main extends Application {
         }
     }
 
-
-    public String jsonSerializer(Stroke myStoke) {
+    public String jsonSerializerStroke(Stroke currentStroke) {
         JsonSerializer jsonSerializer = new JsonSerializer().deep(true);
-        String jsonString = jsonSerializer.serialize(myStoke);
-        System.out.println(jsonString);
+        String jsonString = jsonSerializer.serialize(currentStroke);
 
         return jsonString;
+    }
+
+    public String jsonSerializerGC(GraphicsContext gcSecond) {
+        JsonSerializer jsonSerializer = new JsonSerializer().deep(true);
+        String jsonString = jsonSerializer.serialize(gcSecond);
+        //System.out.println(jsonString);
+
+        return jsonString;
+    }
+
+    public void getJSONString(String jsonString) {
+        strokeString = jsonString;
     }
 
     public static void main(String[] args) {
