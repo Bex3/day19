@@ -105,6 +105,10 @@ public class Main extends Application {
                         gc.strokeOval(e.getX(), e.getY(), strokeSize, strokeSize);
                         xPosition = (e.getX());
                         yPosition = (e.getY());
+                        Stroke myStroke = new Stroke();
+                        myStroke.x = (e.getX());
+                        myStroke.y = (e.getY());
+                        myStroke.strokeS = strokeSize;
                         if (gcSecond != null) {
                             gcSecond.strokeOval(xPosition,yPosition, strokeSize, strokeSize);
                         }
@@ -225,7 +229,7 @@ public class Main extends Application {
             BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
             // send the server an arbitrary message
-            out.println("Marvin says hello!");
+            out.println("Marvin's Room........hello");
             // read what the server returns
             String serverResponse = in.readLine();
 
