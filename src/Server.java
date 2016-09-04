@@ -17,7 +17,8 @@ public class Server {
             while (true) {
                 Socket incomingConnection = serverListener.accept();
                 ConnectionHandler handler = new ConnectionHandler(incomingConnection);
-
+                Thread theThread = new Thread(handler);
+                theThread.start();
             }
         } catch (IOException exception) {
             exception.printStackTrace();

@@ -7,10 +7,12 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
 
+import static sun.management.snmp.jvminstr.JvmThreadInstanceEntryImpl.ThreadStateMap.Byte0.runnable;
+
 /**
  * Created by bearden-tellez on 9/2/16.
  */
-public class ConnectionHandler {
+public class ConnectionHandler implements Runnable{
     Socket clientSocket = null;
 
     public void run() {
@@ -39,6 +41,9 @@ public class ConnectionHandler {
         PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
 
         BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+
+            Main myMain = new Main ();
+            myMain.startSecondStage();
 
             String serverResponse = in.readLine();
             Scanner inputScanner = new Scanner(System.in);

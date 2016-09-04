@@ -82,28 +82,7 @@ public class Main extends Application {
             @Override
             public void handle(ActionEvent event) {
                 System.out.println("Connecting to a new person");
-                try{
-
-                    Socket clientSocket = new Socket ("localhost", 8005);
-                    System.out.println("Connection established");
-                    PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true); //output
-                    System.out.println("output stream initialized");
-
-
-                    BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream())); //input - inputstream gives you the bits and bytes inputstreamreader gives us chars instead of bytes
-                    System.out.println("input stream initialized");
-
-
-                    String serverResponse = in.readLine();
-                    System.out.println("Server response: " + serverResponse);
-                    serverResponse = in.readLine();
-                    System.out.println("Server response: " + serverResponse);
-
-
-                    // clientSocket.close();
-                } catch (IOException exception) {
-                    exception.printStackTrace(); //see the exception
-                }
+                client();
             }
         });
 
@@ -233,13 +212,34 @@ public class Main extends Application {
         System.out.println("About to show the second stage");
 
 
-        secondaryStage.show();
+        //secondaryStage.show();
     }
 
+    public void client () {
+        try {
+            // connect to the server on the target port
+            Socket clientSocket = new Socket("localhost", 8005);
+
+            // once we connect to the server, we also have an input and output stream
+            PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+            BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+
+            // send the server an arbitrary message
+            out.println("Marvin says hello!");
+            // read what the server returns
+            String serverResponse = in.readLine();
+
+            // close the connection
+            clientSocket.close();
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
+    }
 
 
     public static void main(String[] args) {
         launch(args);
+
 
     }
 }
