@@ -1,5 +1,6 @@
 package sample;
 
+import com.sun.corba.se.spi.activation.Server;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -49,6 +50,8 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
+
+
         Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
         primaryStage.setTitle("Hello World");
 
@@ -76,6 +79,8 @@ public class Main extends Application {
         hbButton.getChildren().add(secondButton);
         //grid.add(SecondButton, 0, 1);
 
+        Button thirdButton = new Button ("Start your server");
+        hbButton.getChildren().add(thirdButton);
 
         button.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -94,6 +99,16 @@ public class Main extends Application {
                 isSharing = true;
             }
         });
+
+        thirdButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                ServerThisServer myServer = new ServerThisServer();
+                Thread theServerThread = new Thread(myServer);
+                theServerThread.start();
+            }
+        });
+
 
         // add canvas
         Canvas canvas = new Canvas(DEFAULT_SCENE_WIDTH, DEFAULT_SCENE_HEIGHT-100);
@@ -122,7 +137,7 @@ public class Main extends Application {
                         currentStroke = myStroke;
 
                         jsonSerializerStroke(myStroke);
-
+                        //jsonSerializerGC(gc); //can't pass this each person needs their own GC anyway
 
 
                         if (gcSecond != null) {
@@ -248,12 +263,13 @@ public class Main extends Application {
             out.println("Marvin's Room........hello");
             // read what the server returns
             String serverResponse = in.readLine();
+            System.out.println("Server response" + serverResponse);
 
-            int counter = 0;
-            while(counter < 15) {
+/*            int counter = 0;
+            while(counter < 20) {
                 System.out.println(strokeString);
                 counter++;
-            }
+            }*/
 
             // close the connection
             clientSocket.close();
@@ -269,13 +285,13 @@ public class Main extends Application {
         return jsonString;
     }
 
-    public String jsonSerializerGC(GraphicsContext gcSecond) {
+/*    public String jsonSerializerGC(GraphicsContext gcSecond) {
         JsonSerializer jsonSerializer = new JsonSerializer().deep(true);
         String jsonString = jsonSerializer.serialize(gcSecond);
         //System.out.println(jsonString);
 
         return jsonString;
-    }
+    }*/
 
     public void getJSONString(String jsonString) {
         strokeString = jsonString;
@@ -284,6 +300,9 @@ public class Main extends Application {
     public static void main(String[] args) {
         launch(args);
 
+/*        ServerThisServer myServer = new ServerThisServer();
+        Thread theServerThread = new Thread(myServer);
+        theServerThread.start();*/
 
     }
 }

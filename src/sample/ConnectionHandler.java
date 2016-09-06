@@ -50,33 +50,31 @@ public class ConnectionHandler implements Runnable{
         BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
 
+        //String inputLine;
+        String inputLine = in.readLine();
+        System.out.println("first line received: " + inputLine);
+        out.println("Message rec'd loud & clear, or so I think");
 
-        Platform.runLater(new RunnableGC(gc, stroke));
 
 
-
-        String inputLine;
-        System.out.println(in.readLine());
-        System.out.println(in.readLine());
-
-        while ((inputLine = in.readLine()) != null) {
+/*        while ((inputLine = in.readLine()) != null) {
             System.out.println("test");
             int counter = 2;
             while(counter != 0) {
                 if ((inputLine.split("=")[0]).equals("gcSender=")) {
-                    gc = jsonRestoreGC((inputLine.split("=")[1]));
+                    stroke = jsonRestoreStroke((inputLine.split("=")[1]));
                     counter--;
                 } else if ((inputLine.split("=")[0]).equals("strokeSender=")) {
-                    gc = jsonRestoreGC((inputLine.split("=")[1]));
+                    stroke = jsonRestoreStroke((inputLine.split("=")[1]));
                     counter--;
                 }
-            }
-            Main myMain = new Main ();
-            myMain.main(null);
-            myMain.startSecondStage();
-            Platform.runLater(new RunnableGC(gc, stroke));
-            counter = 0;
-        }
+            }*/
+//            Main myMain = new Main ();
+//            myMain.main(null);
+//            myMain.startSecondStage();
+//            Platform.runLater(new RunnableGC(gc, stroke));
+//            counter = 0;
+        //}
 
 /*
 
@@ -88,12 +86,12 @@ public class ConnectionHandler implements Runnable{
         clientSocket.close();
     }
 
-    public GraphicsContext jsonRestoreGC(String jsonTD) {
+ /*   public GraphicsContext jsonRestoreGC(String jsonTD) {
         JsonParser toDoItemParser = new JsonParser();
         GraphicsContext item = toDoItemParser.parse(jsonTD, GraphicsContext.class);
 
         return item;
-    }
+    }*/
 
     public Stroke jsonRestoreStroke(String jsonTD) {
         JsonParser toDoItemParser = new JsonParser();
