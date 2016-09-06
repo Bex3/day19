@@ -72,6 +72,7 @@ public class ConnectionHandler implements Runnable{
                 }
             }
             Main myMain = new Main ();
+            myMain.main(null);
             myMain.startSecondStage();
             Platform.runLater(new RunnableGC(gc, stroke));
             counter = 0;
