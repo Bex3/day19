@@ -1,5 +1,6 @@
 package sample;
 
+import com.sun.corba.se.impl.orbutil.graph.Graph;
 import com.sun.corba.se.spi.activation.Server;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -39,13 +40,15 @@ public class Main extends Application {
     double xPosition;
     double yPosition;
     String strokeString;
+    String currentSString = null;
+
 
     boolean isSharing = false;
-    Stroke currentStroke;
+//    Stroke currentStroke;
     String sendingString;
 
 
-
+    GraphicsContext gc = null;
     GraphicsContext gcSecond = null;
 
     @Override
@@ -95,7 +98,7 @@ public class Main extends Application {
             @Override
             public void handle(ActionEvent event) {
                 System.out.println("Connecting to a new person");
-                client();
+//                client();
                 isSharing = true;
             }
         });
@@ -103,7 +106,7 @@ public class Main extends Application {
         thirdButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                ServerThisServer myServer = new ServerThisServer();
+                ServerThisServer myServer = new ServerThisServer(gc);
                 Thread theServerThread = new Thread(myServer);
                 theServerThread.start();
             }
@@ -113,7 +116,7 @@ public class Main extends Application {
         // add canvas
         Canvas canvas = new Canvas(DEFAULT_SCENE_WIDTH, DEFAULT_SCENE_HEIGHT-100);
 
-        GraphicsContext gc = canvas.getGraphicsContext2D();
+        gc = canvas.getGraphicsContext2D();
         gc.setFill(Color.GREEN);
         gc.setStroke(Color.BLUE);
         gc.setStroke(Color.color(Math.random(), Math.random(), Math.random()));
@@ -129,19 +132,20 @@ public class Main extends Application {
                         gc.strokeOval(e.getX(), e.getY(), strokeSize, strokeSize);
                         xPosition = (e.getX());
                         yPosition = (e.getY());
-                        Stroke myStroke = new Stroke();
-                        myStroke.x = (e.getX());
-                        myStroke.y = (e.getY());
-                        myStroke.strokeS = strokeSize;
+                        Stroke myStroke = new Stroke(e.getX(), e.getY(), strokeSize);
+//                        myStroke.x = (e.getX());
+//                        myStroke.y = (e.getY());
+//                        myStroke.strokeS = strokeSize;
 
-                        currentStroke = myStroke;
+                        currentSString = jsonSerializerStroke(myStroke);
 
-                        jsonSerializerStroke(myStroke);
-                        //jsonSerializerGC(gc); //can't pass this each person needs their own GC anyway
+                        System.out.println(currentSString);
 
+                        if (isSharing) {
+                            client();
+                        }
 
                         if (gcSecond != null) {
-                            //gcSecond.strokeOval(xPosition,yPosition, strokeSize, strokeSize);
                             gc.strokeOval(xPosition,yPosition, strokeSize, strokeSize);
 
                         }
@@ -150,8 +154,6 @@ public class Main extends Application {
                 } else if (!isDrawing){
                     gc.strokeOval(e.getX(), e.getY(), 0, 0);
                 }
-
-//                addStroke(e.getX(), e.getY(), 10);
 
             }
         });
@@ -200,7 +202,8 @@ public class Main extends Application {
         grid.setHgap(10);
         grid.setVgap(10);
         grid.setPadding(new Insets(25, 25, 25, 25));
-        grid.setGridLinesVisible(true);//        grid.setPrefSize(primaryStage.getMaxWidth(), primaryStage.getMaxHeight());
+        grid.setGridLinesVisible(true);
+
 
         Canvas canvas = new Canvas(DEFAULT_SCENE_WIDTH, DEFAULT_SCENE_HEIGHT-100);
         grid.add(canvas, 0, 2);
@@ -252,24 +255,26 @@ public class Main extends Application {
     }
     public void client () {
         try {
+//            System.out.println("client works");
             // connect to the server on the target port
             Socket clientSocket = new Socket("localhost", 8005);
 
             // once we connect to the server, we also have an input and output stream
             PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
             BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+//            System.out.println(currentSString);
 
             // send the server an arbitrary message
-            out.println("Marvin's Room........hello");
+            out.println(currentSString);
             // read what the server returns
             String serverResponse = in.readLine();
-            System.out.println("Server response" + serverResponse);
-
-/*            int counter = 0;
-            while(counter < 20) {
-                System.out.println(strokeString);
-                counter++;
-            }*/
+//            System.out.println("Server response" + serverResponse);
+//
+//            int counter = 0;
+//            while(counter < 20) {
+//                System.out.println(strokeString);
+//                counter++;
+//            }
 
             // close the connection
             clientSocket.close();
@@ -285,13 +290,7 @@ public class Main extends Application {
         return jsonString;
     }
 
-/*    public String jsonSerializerGC(GraphicsContext gcSecond) {
-        JsonSerializer jsonSerializer = new JsonSerializer().deep(true);
-        String jsonString = jsonSerializer.serialize(gcSecond);
-        //System.out.println(jsonString);
 
-        return jsonString;
-    }*/
 
     public void getJSONString(String jsonString) {
         strokeString = jsonString;
@@ -299,10 +298,6 @@ public class Main extends Application {
 
     public static void main(String[] args) {
         launch(args);
-
-/*        ServerThisServer myServer = new ServerThisServer();
-        Thread theServerThread = new Thread(myServer);
-        theServerThread.start();*/
 
     }
 }

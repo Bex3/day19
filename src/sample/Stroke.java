@@ -8,6 +8,14 @@ public class Stroke {
     Double y;
     Double strokeS;
 
+    public Stroke(double strokeX, double strokeY, double strokeSize) {
+        this.x = strokeX;
+        this.y = strokeY;
+        this.strokeS = strokeSize;
+    }
+
+    public Stroke() {
+    }
 
     public Double getX() {
         return x;

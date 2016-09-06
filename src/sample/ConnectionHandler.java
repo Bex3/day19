@@ -19,6 +19,12 @@ import static sun.management.snmp.jvminstr.JvmThreadInstanceEntryImpl.ThreadStat
 public class ConnectionHandler implements Runnable{
     Socket clientSocket = null;
     private GraphicsContext gc = null;
+
+    public ConnectionHandler(Socket clientSocket, GraphicsContext gc) {
+        this.clientSocket = clientSocket;
+        this.gc = gc;
+    }
+
     private Stroke stroke = null;
 
 
@@ -29,11 +35,6 @@ public class ConnectionHandler implements Runnable{
             ioEx.printStackTrace();
         }
     }
-
-    public ConnectionHandler(Socket incomingConnection) {
-        this.clientSocket = incomingConnection;
-    }
-
 
     private void handleIncomingConnections(Socket incomingConnection) throws IOException {
         System.out.println("Connected");
@@ -50,55 +51,44 @@ public class ConnectionHandler implements Runnable{
         BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
 
-        //String inputLine;
+//        String inputLine;
         String inputLine = in.readLine();
-        System.out.println("first line received: " + inputLine);
-        out.println("Message rec'd loud & clear, or so I think");
+//        System.out.println("first line received: " + inputLine);
+        //out.println("Message rec'd loud & clear, or so I think");
+
+        System.out.println("herp");
+        Stroke myStroke = jsonRestoreStroke(inputLine);
+        System.out.println("derp");
+        gc.strokeOval(myStroke.x, myStroke.y, myStroke.strokeS, myStroke.strokeS);
+//        Platform.runLater(new RunnableGC(this.gc, myStroke));
 
 
+//       while ((inputLine = in.readLine()) != null) {
+           out.println("hiya");
+//
+        }
 
-/*        while ((inputLine = in.readLine()) != null) {
-            System.out.println("test");
-            int counter = 2;
-            while(counter != 0) {
-                if ((inputLine.split("=")[0]).equals("gcSender=")) {
-                    stroke = jsonRestoreStroke((inputLine.split("=")[1]));
-                    counter--;
-                } else if ((inputLine.split("=")[0]).equals("strokeSender=")) {
-                    stroke = jsonRestoreStroke((inputLine.split("=")[1]));
-                    counter--;
-                }
-            }*/
-//            Main myMain = new Main ();
-//            myMain.main(null);
-//            myMain.startSecondStage();
-//            Platform.runLater(new RunnableGC(gc, stroke));
-//            counter = 0;
-        //}
-
-/*
-
-            String serverResponse = in.readLine();
-            Scanner inputScanner = new Scanner(System.in);
-            String inputLine = inputScanner.nextLine();
-*/
-
-        clientSocket.close();
-    }
-
- /*   public GraphicsContext jsonRestoreGC(String jsonTD) {
-        JsonParser toDoItemParser = new JsonParser();
-        GraphicsContext item = toDoItemParser.parse(jsonTD, GraphicsContext.class);
-
-        return item;
-    }*/
-
-    public Stroke jsonRestoreStroke(String jsonTD) {
-        JsonParser toDoItemParser = new JsonParser();
-        Stroke item = toDoItemParser.parse(jsonTD, Stroke.class);
+    public Stroke jsonRestoreStroke(String jsonString) {
+        JsonParser strokeParser = new JsonParser();
+        Stroke item = strokeParser.parse(jsonString, Stroke.class);
 
         return item;
     }
+
+//    public class RunnableGC implements Runnable {
+//
+//        private GraphicsContext gc = null;
+//        private Stroke stroke = null;
+//
+//        public RunnableGC(GraphicsContext gc, Stroke stroke) {
+//            this.gc = gc;
+//            this.stroke = stroke;
+//        }
+//
+//        public void run() {
+//            gc.strokeOval(stroke.x, stroke.y, stroke.strokeS, stroke.strokeS); // <---- this is the actual work we need to do
+//        }
+//    }
 
 
 }

@@ -1,5 +1,8 @@
 package sample;
 
+import com.sun.corba.se.impl.orbutil.graph.Graph;
+import javafx.scene.canvas.GraphicsContext;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -12,15 +15,15 @@ import java.net.Socket;
  */
 public class ServerThisServer implements Runnable{
     Socket clientSocket = null;
+    GraphicsContext gc = null;
 
-
-    public ServerThisServer(Socket incomingConnection) {
-            this.clientSocket = incomingConnection;
-        }
-
-    public ServerThisServer() {
-
+    public ServerThisServer(GraphicsContext gc) {
+        this.gc = gc;
     }
+
+//    public ServerThisServer() {
+//
+//    }
 
     public void run(){
         try {
@@ -41,7 +44,7 @@ public class ServerThisServer implements Runnable{
 
             while (true) {
                 Socket incomingConnection = serverListener.accept();
-                ConnectionHandler handler = new ConnectionHandler(incomingConnection);
+                ConnectionHandler handler = new ConnectionHandler(incomingConnection, gc);
                 Thread theThread = new Thread(handler);
                 theThread.start();
 
